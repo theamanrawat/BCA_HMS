@@ -388,6 +388,7 @@ def booking_make(request):
     path = role + "/"
 
     room = Room.objects.get(number=request.POST.get("roomid"))
+    #print(room)
     guests = Guest.objects.all()  # we pass this to context
     names = []
     if request.method == 'POST':
@@ -427,7 +428,7 @@ def booking_make(request):
                         d = Dependees(booking=curbooking,
                                       name=request.POST.get(nameid))
                         d.save()
-            return redirect("payment")
+            return redirect("success-redirect")
 
     context = {
         "fd": request.POST.get("fd"),
@@ -441,6 +442,12 @@ def booking_make(request):
 
     return render(request, path + "booking-make.html", context)
 
+@login_required(login_url='login')
+def success_redirect(request):
+    role = str(request.user.groups.all()[0])
+    path = role + "/"
+
+    return render(request, path + "success-redirect.html")
 
 @login_required(login_url='login')
 def deleteBooking(request, pk):
